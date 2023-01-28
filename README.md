@@ -7,16 +7,22 @@
 # Примеры запросов
 Регистрация нового пользователя:
 POST api/v1/auth/signup/
+
 Получение JWT-токена:
 POST api/v1/auth/token/
+
 Получение списка всех категорий:
 GET api/v1/categories/
+
 Удаление жанра:
 DELETE api/v1/genres/{slug}/
+
 Частичное обновление информации о произведении:
 PATCH /api/v1/titles/{titles_id}
+
 Получение списка всех отзывов:
 GET /api/v1/titles/{title_id}/reviews/
+
 Добавление комментария к отзыву:
 POST /api/v1/titles/{title_id}/reviews/{review_id}/comments/
 
@@ -34,12 +40,18 @@ python manage.py runserver
 
 # Технологии
 Python 3.7
+
 Django 3.2
+
 Django Rest Framework 3.12.4
+
 Simple JWT
+
 SQLite3
 
 # Авторы
 Данилова Марина - https://github.com/maridana
+
 Личинин Виталий - https://github.com/Lichinin
+
 Горовенко Валентин - https://github.com/ValentinGorovenko
