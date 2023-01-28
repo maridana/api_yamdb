@@ -15,7 +15,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title, User
 
 from .mixins import ModelMixinSet
-from .permissions import IsAdmin, IsSuperUserIsAdminIsModeratorIsAuthor, AnonimReadOnly
+from .permissions import IsAdmin, IsSuperUserIsAdminIsModeratorIsAuthor,
+                         AnonimReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
                           TitleReadSerializer, TitleWriteSerializer,
