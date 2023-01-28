@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title, User
 
-from api_yamdb.settings import EMAIL_YAMDB
+from api_yamdb.settings import DOMAIN_NAME
 
 from .mixins import ModelMixinSet
 from .permissions import (AnonimReadOnly, IsAdmin,
@@ -24,6 +24,8 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           TitleReadSerializer, TitleWriteSerializer,
                           UserCreateSerializer, UserRecieveTokenSerializer,
                           UserSerializer)
+
+EMAIL_YAMDB = f'admin@{DOMAIN_NAME}'
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
