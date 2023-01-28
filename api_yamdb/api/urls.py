@@ -23,17 +23,20 @@ router.register('categories', CategoryViewSet, basename='categoty')
 router.register('genres', GenreViewSet, basename='genre')
 router.register('titles', TitleViewSet, basename='title')
 
-
-urlpatterns = [
-    path('v1/', include(router.urls)),
+auth_urls = [
     path(
-        'v1/auth/signup/',
+        'signup/',
         UserCreateView.as_view(),
         name='signup'
     ),
     path(
-        'v1/auth/token/',
+        'token/',
         UserReceiveTokenViewSet.as_view({'post': 'create'}),
         name='token'
     )
+]
+
+urlpatterns = [
+    path('v1/', include(router.urls)),
+    path('v1/auth/', include(auth_urls)),
 ]
