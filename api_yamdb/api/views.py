@@ -3,7 +3,6 @@ from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
-from api.filters import TitleFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -12,17 +11,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Genre, Review, Title, User
 
 from .mixins import ModelMixinSet
-from .permissions import (IsAdmin, IsSuperUserIsAdminIsModeratorIsAuthor,
-                          AnonimReadOnly)
+from .permissions import (AnonimReadOnly, IsAdmin,
+                          IsSuperUserIsAdminIsModeratorIsAuthor)
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
                           TitleReadSerializer, TitleWriteSerializer,
                           UserCreateSerializer, UserRecieveTokenSerializer,
                           UserSerializer)
+from api.filters import TitleFilter
+from api_yamdb.settings import DOMAIN_NAME
+from reviews.models import Category, Genre, Review, Title, User
 
+EMAIL_YAMDB = f'admin@{DOMAIN_NAME}'
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
@@ -42,11 +44,19 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsSuperUserIsAdminIsModeratorIsAuthor]
 
     def get_queryset(self):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        review = get_object_or_404(
+            Review,
+            pk=self.kwargs.get('review_id'),
+            title_id=self.kwargs.get('title_id')
+        )
         return review.comments.all()
 
     def perform_create(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        review = get_object_or_404(
+            Review,
+            pk=self.kwargs.get('review_id'),
+            title_id=self.kwargs.get('title_id')
+        )
         serializer.save(author=self.request.user, review=review)
 
 
@@ -87,7 +97,7 @@ def send_confirmation_code(email, confirmation_code):
     send_mail(
         subject='Код подтверждения',
         message=f'Ваш код подтверждения: {confirmation_code}',
-        from_email='registration_YaMDb@mail.com',
+        from_email=EMAIL_YAMDB,
         recipient_list=(email,),
         fail_silently=False,
     )
@@ -161,7 +171,7 @@ class UserViewSet(mixins.ListModelMixin,
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        elif request.method == 'DELETE':
+        if request.method == 'DELETE':
             user.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = UserSerializer(user)

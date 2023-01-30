@@ -1,4 +1,3 @@
-
 from enum import Enum
 
 from django.contrib.auth.models import AbstractUser
@@ -124,9 +123,10 @@ class Title(models.Model):
         max_length=200,
         db_index=True
     )
-    year = models.IntegerField(
+    year = models.PositiveIntegerField(
         'год',
-        validators=(validate_year, )
+        validators=(validate_year, ),
+        db_index=True
     )
     category = models.ForeignKey(
         Category,
@@ -168,16 +168,13 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='review'
     )
-    score = models.IntegerField(
+    score = models.PositiveIntegerField(
         validators=[
             MaxValueValidator(10),
             MinValueValidator(1)
         ]
     )
     pub_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.text
 
     class Meta:
         ordering = ['pub_date']
@@ -187,6 +184,9 @@ class Review(models.Model):
                 name='unique_review_owner'
             )
         ]
+
+    def __str__(self):
+        return self.text
 
 
 class Comment(models.Model):
@@ -205,3 +205,6 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['pub_date']
+
+    def __str__(self):
+        return self.text
