@@ -26,6 +26,7 @@ from reviews.models import Category, Genre, Review, Title, User
 
 EMAIL_YAMDB = f'admin@{DOMAIN_NAME}'
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = (IsSuperUserIsAdminIsModeratorIsAuthor,)
